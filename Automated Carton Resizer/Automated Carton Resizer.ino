@@ -30,6 +30,9 @@ void setup()
   servoMotor.write(90);   // Move the servo to its default position (0 degrees)
   pinMode(ECHOPIN, INPUT); //initialize echo pin
   pinMode(TRIGPIN, OUTPUT); //initialize trigger pin 
+  pinMode(dcMotorOut, OUTPUT);
+  pinMode(dcMotorIn, OUTPUT);
+  pinMode(ssrMotorControl, OUTPUT);
   delay(1000); //initialize first 
 }
 
@@ -62,6 +65,13 @@ void ScanObject()
  
   distance = (duration / 2) * 0.343;
  
+  // Check if pulseIn() returns 0, indicating timeout or error
+  if (duration == 0) 
+  {
+    Serial.println("Error: Ultrasonic sensor reading failed. Check wiring and sensor connection.");
+    return; // Exit the function if there's an error
+  }
+
  //change operation to <= or >=, depending on what you need. if the distance scanned is greater or less than and equal to the scanned distance
   if(distance <= distanceSensor) 
   {
@@ -73,6 +83,8 @@ void ScanObject()
     isScanned = true; 
     Serial.println("Scanned");
   }
+
+
   Serial.print("Distance: ");
   Serial.println(distance);
   Serial.println("sensorCounter: " + sensorCounter);
